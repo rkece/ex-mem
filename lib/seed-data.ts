@@ -1,0 +1,308 @@
+import { Memory, MemoryConflict, SourceDocument, CurrentContext } from './types';
+
+export const INITIAL_CONTEXT: CurrentContext = {
+  project: 'Ex-Mem Core',
+  task: 'Implementing authentication middleware in API gateway',
+  topic: 'Token validation and stateless session handling',
+  detectedKeywords: ['auth', 'jwt', 'middleware', 'stateless', 'tokens', 'gateway', 'rest'],
+  activeEntities: ['AuthMiddleware', 'JWTService', 'API Gateway', 'UserSession'],
+  activePeople: ['Alex Rivera', 'Sarah Chen', 'Marcus Vance'],
+  activeFile: 'src/gateway/auth.middleware.ts',
+  lastUpdated: new Date().toISOString(),
+};
+
+export const INITIAL_SOURCES: SourceDocument[] = [
+  {
+    id: 'src-1',
+    name: 'System Architecture Blueprint v1.2',
+    type: 'spec',
+    project: 'Ex-Mem Core',
+    date: '2026-05-12',
+    processingStatus: 'completed',
+    memoriesExtracted: {
+      events: 3,
+      decisions: 4,
+      entities: 12,
+      discussions: 2,
+      requirements: 5,
+      actions: 2,
+    },
+    rawContent: `SYSTEM ARCHITECTURE SPECIFICATION v1.2
+Lead Architect: Sarah Chen
+Date: May 12, 2026
+Core Decisions & Requirements:
+1. Microservices communicate strictly over REST with stateless payloads.
+2. Frontend framework standard: React 19 with Server Components is confirmed for all web client modules.
+3. Services must never hold stateful session memory locally in RAM.`,
+    author: 'Sarah Chen',
+  },
+  {
+    id: 'src-2',
+    name: 'Auth Security RFC Draft & Review',
+    type: 'rfc',
+    project: 'Ex-Mem Core',
+    date: '2026-05-15',
+    processingStatus: 'completed',
+    memoriesExtracted: {
+      events: 2,
+      decisions: 2,
+      entities: 9,
+      discussions: 4,
+      requirements: 3,
+      actions: 1,
+    },
+    rawContent: `RFC-042: AUTHENTICATION PROTOCOL
+Authors: Marcus Vance, Sarah Chen
+Date: May 15, 2026
+After evaluating Session Cookies, OAuth 2.0 PKCE, and JWT:
+Decision: Selected JSON Web Tokens (JWT) with asymmetric RS256 signing.
+Rationale: Aligns directly with May 13 requirement for stateless REST microservice boundaries without persistent database roundtrips on each RPC.`,
+    author: 'Marcus Vance',
+  },
+  {
+    id: 'src-3',
+    name: 'Frontend Team Legacy Handover Notes',
+    type: 'handover',
+    project: 'Ex-Mem Core',
+    date: '2026-05-14',
+    processingStatus: 'completed',
+    memoriesExtracted: {
+      events: 1,
+      decisions: 1,
+      entities: 6,
+      discussions: 1,
+      requirements: 2,
+      actions: 0,
+    },
+    rawContent: `HANDOVER MEMORANDUM - FRONTEND STACK
+Author: David Kim (Outgoing Tech Lead)
+Date: May 14, 2026
+The team has standardized on Angular 18 Enterprise Suite for all portal consoles due to existing enterprise form libraries and company-wide design tokens.`,
+    author: 'David Kim',
+  },
+  {
+    id: 'src-4',
+    name: 'Sprint 24 Engineering Sync Transcript',
+    type: 'transcript',
+    project: 'Ex-Mem Core',
+    date: '2026-05-18',
+    processingStatus: 'completed',
+    memoriesExtracted: {
+      events: 4,
+      decisions: 1,
+      entities: 11,
+      discussions: 5,
+      requirements: 1,
+      actions: 3,
+    },
+    rawContent: `SPRINT 24 SYNC AUDIO TRANSCRIPT (EXCERPT)
+Date: May 18, 2026
+[10:14] Marcus: We had to switch the session cache to a Redis cluster over the weekend.
+[10:15] Sarah: Wait, did we benchmark latency?
+[10:15] Marcus: I don't have the log in front of me, but the ticket was moved to completed.
+[Note: Audio cut off for 4 minutes during network blip; no rationale document was linked in Jira.]`,
+    author: 'Marcus Vance',
+  },
+];
+
+export const INITIAL_MEMORIES: Memory[] = [
+  {
+    id: 'mem-101',
+    project: 'Ex-Mem Core',
+    content: 'Evaluated authentication approaches: Session cookies vs OAuth 2.0 PKCE vs JSON Web Tokens (JWT). Explored security vulnerabilities and horizontal scalability tradeoffs.',
+    type: 'discussion',
+    date: '2026-05-10T14:30:00Z',
+    people: ['Sarah Chen', 'Marcus Vance'],
+    entities: ['JWT', 'Session Cookies', 'OAuth 2.0', 'Scalability'],
+    reason: 'Initial architectural discovery phase to unblock core gateway design.',
+    source: {
+      id: 'src-2',
+      title: 'Auth Security RFC Draft & Review',
+      section: 'Section 1.1 Exploration',
+      timestamp: 'May 10, 2026',
+      author: 'Marcus Vance',
+      excerpt: 'Marcus and Sarah debated cookie-based sessions vs stateless bearer tokens. Cookies introduce cross-origin friction; bearer tokens require disciplined expiration cycles.',
+    },
+    confidence: 94,
+    relatedMemories: ['mem-102', 'mem-103'],
+    status: 'verified',
+    whySurfaced: 'Foundational discussion preceding the current gateway auth task.',
+  },
+  {
+    id: 'mem-102',
+    project: 'Ex-Mem Core',
+    content: 'All service-to-service communication must strictly adhere to REST stateless principles. Gateway services cannot rely on sticky sessions or local RAM storage.',
+    type: 'requirement',
+    date: '2026-05-13T09:15:00Z',
+    people: ['Sarah Chen'],
+    entities: ['REST', 'Stateless', 'API Gateway', 'Microservices'],
+    reason: 'To allow horizontal autoscaling across Kubernetes pods without synchronization overhead.',
+    source: {
+      id: 'src-1',
+      title: 'System Architecture Blueprint v1.2',
+      section: 'Section 3.4 Microservices Invariants',
+      timestamp: 'May 13, 2026',
+      author: 'Sarah Chen',
+      excerpt: 'Invariance Rule #1: All services must be completely stateless. Any authorization mechanism requiring memory pin-down will fail scale-out audits.',
+    },
+    confidence: 98,
+    relatedMemories: ['mem-101', 'mem-103'],
+    status: 'verified',
+    whySurfaced: 'High relevance (98%) to current task: enforces stateless design constraint.',
+  },
+  {
+    id: 'mem-103',
+    project: 'Ex-Mem Core',
+    content: 'Selected JSON Web Tokens (JWT) with RS256 asymmetric signatures as the primary authentication protocol across all microservice endpoints.',
+    type: 'decision',
+    date: '2026-05-15T16:45:00Z',
+    people: ['Marcus Vance', 'Sarah Chen'],
+    entities: ['JWT', 'RS256', 'Authentication', 'Gateway'],
+    reason: 'REST architecture mandates statelessness; JWT allows decentralized signature validation at gateway edges without database roundtrips.',
+    source: {
+      id: 'src-2',
+      title: 'Auth Security RFC Draft & Review',
+      section: 'Section 4: Final Recommendation',
+      timestamp: 'May 15, 2026',
+      author: 'Marcus Vance',
+      excerpt: 'Decision: Selected JWT with asymmetric RS256 signing. Reason: Fulfills May 13 stateless REST constraint.',
+    },
+    confidence: 96,
+    relatedMemories: ['mem-101', 'mem-102', 'mem-104'],
+    status: 'verified',
+    whySurfaced: 'Direct answer to current task: explains exact choice of JWT and its algorithmic constraints.',
+  },
+  {
+    id: 'mem-104',
+    project: 'Ex-Mem Core',
+    content: 'Started implementation of JWT verification middleware inside API gateway with rotating JWKS key cache.',
+    type: 'action',
+    date: '2026-05-16T11:00:00Z',
+    people: ['Alex Rivera'],
+    entities: ['JWKS', 'AuthMiddleware', 'API Gateway', 'KeyRotation'],
+    reason: 'Execution of May 15 JWT architectural decision.',
+    source: {
+      id: 'src-2',
+      title: 'Auth Security RFC Draft & Review',
+      section: 'Sprint Task EXM-882',
+      timestamp: 'May 16, 2026',
+      author: 'Alex Rivera',
+      excerpt: 'Alex created branch feature/auth-jwt-middleware and began scaffold for JWKS public key cache with 15-minute TTL.',
+    },
+    confidence: 91,
+    relatedMemories: ['mem-103'],
+    status: 'verified',
+    whySurfaced: 'Direct predecessor commit to the active file src/gateway/auth.middleware.ts.',
+  },
+  {
+    id: 'mem-105',
+    project: 'Ex-Mem Core',
+    content: 'Decided to switch session storage layer to a multi-node Redis cluster.',
+    type: 'decision',
+    date: '2026-05-18T10:14:00Z',
+    people: ['Marcus Vance'],
+    entities: ['Redis Cluster', 'Session Storage', 'Cache'],
+    reason: null, // Genuinely missing reason! Demonstrates gap detection honestly.
+    source: {
+      id: 'src-4',
+      title: 'Sprint 24 Engineering Sync Transcript',
+      section: 'Open Mic / Architecture Updates',
+      timestamp: 'May 18, 2026',
+      author: 'Marcus Vance',
+      excerpt: 'Marcus: "We had to switch the session cache to a Redis cluster over the weekend." No further explanation recorded.',
+    },
+    confidence: 62,
+    relatedMemories: [],
+    status: 'unverified',
+    whySurfaced: 'Identified as having an unrecorded decision rationale.',
+  },
+  {
+    id: 'mem-106',
+    project: 'Ex-Mem Core',
+    content: 'Selected React 19 with Server Components as the client-side engineering framework for the web dashboard.',
+    type: 'decision',
+    date: '2026-05-12T10:00:00Z',
+    people: ['Sarah Chen'],
+    entities: ['React 19', 'Frontend', 'Server Components'],
+    reason: 'Modern streaming performance and hydration efficiency.',
+    source: {
+      id: 'src-1',
+      title: 'System Architecture Blueprint v1.2',
+      section: 'Section 2.2 Frontend Framework',
+      timestamp: 'May 12, 2026',
+      author: 'Sarah Chen',
+      excerpt: 'React 19 with Server Components is confirmed for all web client modules.',
+    },
+    confidence: 92,
+    relatedMemories: ['mem-107'],
+    status: 'conflicted',
+  },
+  {
+    id: 'mem-107',
+    project: 'Ex-Mem Core',
+    content: 'Selected Angular 18 Enterprise Suite as the company-wide frontend standard for portal consoles.',
+    type: 'decision',
+    date: '2026-05-14T15:30:00Z',
+    people: ['David Kim'],
+    entities: ['Angular 18', 'Frontend', 'Enterprise Suite'],
+    reason: 'Existing enterprise component libraries and governance policies.',
+    source: {
+      id: 'src-3',
+      title: 'Frontend Team Legacy Handover Notes',
+      section: 'Section 1: Stack Decisions',
+      timestamp: 'May 14, 2026',
+      author: 'David Kim',
+      excerpt: 'The team has standardized on Angular 18 Enterprise Suite for all portal consoles.',
+    },
+    confidence: 84,
+    relatedMemories: ['mem-106'],
+    status: 'conflicted',
+  },
+  {
+    id: 'mem-108',
+    project: 'Ex-Mem Core',
+    content: 'Completed automated load test benchmark on JWT verification under 50,000 concurrent RPS; latency p99 stayed below 1.8ms.',
+    type: 'result',
+    date: '2026-05-17T18:20:00Z',
+    people: ['Alex Rivera', 'Sarah Chen'],
+    entities: ['LoadTest', 'Latency', 'p99', 'Benchmark'],
+    reason: 'Validation of May 15 JWT decision performance goals.',
+    source: {
+      id: 'src-2',
+      title: 'Auth Security RFC Draft & Review',
+      section: 'Appendix B: Benchmark Logs',
+      timestamp: 'May 17, 2026',
+      author: 'Alex Rivera',
+      excerpt: 'Grafana run #902: 50k req/s sustained over 30 minutes. Average CPU usage on gateway node: 24%. Validation successful.',
+    },
+    confidence: 97,
+    relatedMemories: ['mem-103', 'mem-104'],
+    status: 'verified',
+  },
+];
+
+export const INITIAL_CONFLICTS: MemoryConflict[] = [
+  {
+    id: 'conflict-1',
+    topic: 'Primary Frontend Framework Selection for Client Portal',
+    project: 'Ex-Mem Core',
+    status: 'unresolved',
+    memoryA: {
+      memoryId: 'mem-106',
+      statement: 'React 19 with Server Components is confirmed for all web client modules.',
+      sourceTitle: 'System Architecture Blueprint v1.2',
+      date: 'May 12, 2026',
+      author: 'Sarah Chen (Lead Architect)',
+      confidence: 92,
+    },
+    memoryB: {
+      memoryId: 'mem-107',
+      statement: 'The team has standardized on Angular 18 Enterprise Suite for all portal consoles.',
+      sourceTitle: 'Frontend Team Legacy Handover Notes',
+      date: 'May 14, 2026',
+      author: 'David Kim (Outgoing Tech Lead)',
+      confidence: 84,
+    },
+    explanation: 'Sarah Chen mandated React 19 in the official architecture blueprint on May 12, while David Kim recorded Angular 18 in the handover notes two days later. Neither source has an explicit deprecation or override reference to the other.',
+  },
+];
