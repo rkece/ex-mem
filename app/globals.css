@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -24,7 +24,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom hairline borders */
+/* Hairline dividers & borders */
 .border-hairline {
   border: 1px solid #2A2A2E;
 }
@@ -45,10 +45,61 @@ body {
   border-left: 1px solid #2A2A2E;
 }
 
+/* Slick UI Effects */
+.card-hover-glow {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-glow:hover {
+  border-color: rgba(198, 166, 103, 0.4);
+  box-shadow: 0 0 25px -5px rgba(198, 166, 103, 0.08);
+  transform: translateY(-1px);
+}
+
+.subtle-glow {
+  box-shadow: 0 0 20px -3px rgba(198, 166, 103, 0.12);
+}
+
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  background: inherit;
+  opacity: 0.4;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Reserved special state: Glass blur overlay for Context Reconstruction ONLY */
+.reconstruction-glass-backdrop {
+  background: rgba(13, 13, 15, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Quoted memory styling with editorial serif */
+.recalled-quote {
+  font-family: var(--font-fraunces);
+  font-style: italic;
+  font-weight: 300;
+  color: #EDEAE2;
+  letter-spacing: -0.01em;
+}
+
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -62,27 +113,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #3A3A40;
-}
-
-/* Reserved special state: Glass blur overlay for Context Reconstruction ONLY */
-.reconstruction-glass-backdrop {
-  background: rgba(13, 13, 15, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* Quoted memory styling with editorial serif */
-.recalled-quote {
-  font-family: var(--font-fraunces);
-  font-style: italic;
-  font-weight: 300;
-  color: #EDEAE2;
-  letter-spacing: -0.01em;
-}
-
-/* Editorial headline */
-.editorial-headline {
-  font-family: var(--font-fraunces);
-  font-weight: 400;
-  letter-spacing: -0.02em;
 }
